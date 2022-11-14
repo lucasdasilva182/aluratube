@@ -1,7 +1,22 @@
 {
     "name": "Lucas Silva",
     "job": "Dev Front-end",
+    "bannerBG": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=820&q=80",
     "github": "lucasilva182",
+    "favoritos":{
+        "aluratube favoritos":[
+            {
+                "imgPerfil": "https://yt3.ggpht.com/0LlTclJ83iszU9z8k8XRME7C9hhJ2d59f0p5cfXpIGzg2cVdrCkhqFfDE3o8UMBAtFgML_N1=s68-c-k-c0x00ffffff-no-rj",
+                "username": "KaBuM! TV",
+                "url": "https://www.youtube.com/c/kabumtv"
+            },
+            {
+                "imgPerfil": "https://yt3.ggpht.com/_vs0LEiG7n9jkZNqLrku4e5QIYIPeBL44_u1Co4rNbub07qifh9-JaPSwjqgsgL0DEo0eZ1A=s68-c-k-c0x00ffffff-no-rj",
+                "username": "Loop Infinito",
+                "url": "https://www.youtube.com/c/oloopinfinito"
+            }
+        ]
+    },
     "playlists": {
         "jogos": [
             {
