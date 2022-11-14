@@ -43,5 +43,18 @@ export const StyledTimeline = styled.div`
         }
       }
     }
+    div::-webkit-scrollbar {
+      width: 12px;
+      height: 5px;
+    }
+  
+    div::-webkit-scrollbar-track {
+      display:none;
+    }
+  
+    div::-webkit-scrollbar-thumb {
+      background-color: ${({theme}) => theme.borderBase}; 
+      border-radius: 20px; 
+    }
   }
 `;
