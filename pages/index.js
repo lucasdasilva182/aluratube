@@ -1,27 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import config from "../config.json"
 import styled from "styled-components";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 import { StyledFavoritos } from "../src/components/Favoritos";
+import { videoService } from "../src/services/videoService";
+import RegisterVideo from "../src/components/RegisterVideo";
+
+
 
 function HomePage() {
-    const [valorDoFiltro, setValorDoFiltro] = React.useState("");
+    const service = videoService();
+    const [valorDoFiltro, setValorDoFiltro] = useState("");
+    const [playlists, setPlaylists] = useState({});
+
+    useEffect(() => {
+        service.getAllVideos()
+            .then((dados) => {
+                const novasPlaylists = { ...playlists }
+                dados.data.forEach((video) => {
+                    if(!novasPlaylists[video.playlist]) novasPlaylists[video.playlist] = []
+                    novasPlaylists[video.playlist].unshift(video)
+                })
+                setPlaylists(novasPlaylists);
+            });
+
+    }, []);
+
     return (
         <>
             <div >
-                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro}/>
-                <Header/>
-                <Timeline searchValue={valorDoFiltro} playlists={config.playlists}/>
-                <Favoritos favoritos={config.favoritos}/>
+                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
+                <Header />
+                <Timeline searchValue={valorDoFiltro} playlists={playlists}/>
+                <Favoritos favoritos={config.favoritos} />
+                <RegisterVideo />
             </div>
         </>
     )
-  }
-  export default HomePage
+}
+export default HomePage
 
-  const StyledHeader = styled.div`
-    background-color: ${({theme}) => theme.backgroundLevel1};
+const StyledHeader = styled.div`
+    background-color: ${({ theme }) => theme.backgroundLevel1};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,8 +67,8 @@ function HomePage() {
         gap: 16px;
     }
   `;
-  function Header(){
-    return(
+function Header() {
+    return (
         <StyledHeader>
             <div className="banner"></div>
             <section className="user-info">
@@ -59,29 +80,29 @@ function HomePage() {
             </section>
         </StyledHeader>
     )
-  }
+}
 
-  function Timeline({searchValue, ...props}){
-      const playlistName = Object.keys(props.playlists)
-      //Statement - Não usado no React
-      //Retorno por Expressão
-    return(
+function Timeline({ searchValue, ...props }) {
+    const playlistName = Object.keys(props.playlists);
+    //Statement - Não usado no React
+    //Retorno por Expressão
+    return (
         <StyledTimeline>
-            {playlistName.map((playlistName) =>{
+            {playlistName.map((playlistName) => {
                 const videos = props.playlists[playlistName];
                 return (
-                    <section key={playlistName}>
+                    <section key={playlistName}> 
                         <h2>{playlistName}</h2>
                         <div>
-                            {videos.filter((video) =>{
-                                const titleNormalized = video.title.toLowerCase();
+                            {videos.filter((video) => {
+                                const titleNormalized = video.titulo.toLowerCase();
                                 const searchValueNormalized = searchValue.toLowerCase();
                                 return titleNormalized.includes(searchValueNormalized);
-                            }).map((video)=>{
+                            }).map((video) => {
                                 return (
-                                    <a key={video.url} href={video.url}>
+                                    <a key={video.id} href={video.url}>
                                         <img src={video.thumb} />
-                                        <span>{video.title}</span>
+                                        <span>{video.titulo}</span>
                                     </a>
                                 )
                             })}
@@ -91,19 +112,19 @@ function HomePage() {
             })}
         </StyledTimeline>
     )
-  }
+}
 
-  function Favoritos(props){
-      const canaisFavoritos = Object.keys(props.favoritos)
-    return(
+function Favoritos(props) {
+    const canaisFavoritos = Object.keys(props.favoritos)
+    return (
         <StyledFavoritos>
-            {canaisFavoritos.map((canaisFavoritos) =>{
+            {canaisFavoritos.map((canaisFavoritos) => {
                 const canais = props.favoritos[canaisFavoritos];
                 return (
                     <section key={canaisFavoritos}>
                         <h2>{canaisFavoritos}</h2>
                         <div>
-                            {canais.map((canais)=>{
+                            {canais.map((canais) => {
                                 return (
                                     <a key={canais.url} href={canais.url} target="_blank">
                                         <img src={canais.imgPerfil} />
@@ -117,4 +138,6 @@ function HomePage() {
             })}
         </StyledFavoritos>
     )
-  }
+}
+
+<RegisterVideo />

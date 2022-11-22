@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import ColorModeProvider, {ColorModeContext} from "../src/components/Menu/components/ColorMode";
@@ -28,7 +28,7 @@ function ProviderWrapper(props){
     )
 }
 
-function MyApp({Component, pageProps}){
+function Root({Component, pageProps}){
 
     const contexto = React.useContext(ColorModeContext);
 
@@ -43,7 +43,7 @@ function MyApp({Component, pageProps}){
 export default function _App(props){
     return (
         <ProviderWrapper>
-            <MyApp {...props} />
+            <Root {...props} />
         </ProviderWrapper>
     )
 };
