@@ -104,7 +104,6 @@ function Timeline({ searchValue, ...props }) {
     }
     return (
         <>
-
             <StyledTimeline>
                 {playlistName.map((playlistName) => {
                     const videos = props.playlists[playlistName];
