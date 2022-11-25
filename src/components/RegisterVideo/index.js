@@ -1,5 +1,5 @@
-import React from "react";
-import { StyledRegisterVideo } from "./styles";
+import React, { useState } from "react";
+import { StyledModal } from "./styles";
 import { videoService } from "../../services/videoService";
 
 //Custom Hook
@@ -21,14 +21,15 @@ function useForm() {
     };
 }
 
-export default function RegisterVideo(){
+export default function RegisterVideo({ refresh, clearArray }){
     const service = videoService();
     const formCadastro = useForm();
-    const [formVisivel, setFormVisivel] = React.useState(false);
+    const [formVisivel, setFormVisivel] = useState(false);
     let urlThumb = '';
+    let count = 0;
 
     return (
-        <StyledRegisterVideo>
+        <StyledModal>
             <button className="add-video" onClick={() => setFormVisivel(true)}>+</button>
             {formVisivel && ( //&& equivale ao operador ternário
                 <form onSubmit={(e) => {
@@ -43,6 +44,10 @@ export default function RegisterVideo(){
 
                     service.setVideos(dataVideo)
                     .then((response) =>{
+                        clearArray({});
+                        refresh(() => {
+                            count++
+                        })
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -50,7 +55,7 @@ export default function RegisterVideo(){
                     setFormVisivel(false);
                     formCadastro.clearForm();
                 }}>
-                    <div>
+                    <div className="modal-add-video">
                         <button type="button" className="close-modal" onClick={() => {
                             setFormVisivel(false);
                             formCadastro.clearForm();
@@ -84,6 +89,6 @@ export default function RegisterVideo(){
                     </div>
                 </form>
             )}
-        </StyledRegisterVideo>
+        </StyledModal>
     )
 }

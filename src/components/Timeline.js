@@ -33,13 +33,35 @@ export const StyledTimeline = styled.div`
       grid-auto-columns: minmax(200px,1fr);
       overflow-x: scroll;
       scroll-snap-type: x mandatory;
-      a {
-        scroll-snap-align: start;
-        span {
-          padding-top: 8px;
-          display: block;
-          padding-right: 24px;
-          color: ${({ theme }) => theme.textColorBase || "#222222"};
+      .eachVideo{
+        position: relative;
+        a {
+          scroll-snap-align: start;
+          span {
+            padding-top: 8px;
+            display: block;
+            padding-right: 24px;
+            color: ${({ theme }) => theme.textColorBase || "#222222"};
+          }
+        }
+        button{
+          opacity: 0.5 !important;
+          position: absolute;
+          top: 0px;
+          right: -10px;
+          width: 25px;
+          height: 25px;
+          border-radius: 50px;
+          border: none;
+          z-index: 2;
+          span{
+            font-size: 2rem;
+            color: red;
+            line-height: 20px;
+          }
+          &:hover{
+            opacity: 1 !important;
+          }
         }
       }
     }

@@ -16,9 +16,10 @@ export function videoService() {
             return supabase.from('video')
                 .insert(list)
         },
-        onChangeTalbe() {
-            return supabase
-                .channel('*')
+        async deleteVideoDB(param) {
+            return await supabase.from('video')
+                .delete()
+                .eq('id', param)
         }
     }
 }

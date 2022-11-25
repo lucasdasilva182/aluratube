@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledRegisterVideo = styled.div`
+export const StyledModal = styled.div`
   .add-video {
     width: 50px;
     height: 50px;
@@ -35,7 +35,21 @@ export const StyledRegisterVideo = styled.div`
     color: inherit;
     margin-top: 16px;
   }
-  form {
+  .btn {
+    background-color: red;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    color: inherit;
+    margin-top: 16px;
+    &.btn-cancelar{
+      background-color: #f9f9f9 !important;
+      color: red !important;
+      opacity: 0.5 !important;
+    }
+  }
+  form, .modal-base {
     width: 100%;
     padding: 5%;
     background-color: rgba(0,0,0,0.5);
@@ -45,9 +59,11 @@ export const StyledRegisterVideo = styled.div`
     z-index: 100;
     display: flex;
     justify-content: center;
-    & > div {
+    & .modal-add-video {
       flex: 1;
       border-radius: 8px;
+      max-height: 420px;
+      height: auto;
       max-width: 320px;
       background-color: ${({ theme }) => theme.backgroundLevel2};
       display: flex;
@@ -55,6 +71,30 @@ export const StyledRegisterVideo = styled.div`
       position: relative;
       padding: 16px;
       padding-top: 40px;
+    }
+    & .modal-confirmation{
+      flex: 1;
+      border-radius: 8px;
+      height: 150px;
+      max-width: 320px;
+      background-color: ${({ theme }) => theme.backgroundLevel2};
+      display: flex;
+      position: relative;
+      flex-flow: column;
+      padding: 16px;
+      padding: 60px 20px;
+      justify-content: center;
+      align-items: center;
+      p, a {
+        text-align: center;
+      }
+      & .buttons-content{
+        flex: 1;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 100%;
+      }
     }
   }
   select{

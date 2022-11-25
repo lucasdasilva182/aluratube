@@ -6,35 +6,36 @@ import { StyledTimeline } from "../src/components/Timeline";
 import { StyledFavoritos } from "../src/components/Favoritos";
 import { videoService } from "../src/services/videoService";
 import RegisterVideo from "../src/components/RegisterVideo";
+import { StyledModal } from "../src/components/RegisterVideo/styles";
 
 
-
+const service = videoService();
 function HomePage() {
-    const service = videoService();
-    const [valorDoFiltro, setValorDoFiltro] = useState("");
     const [playlists, setPlaylists] = useState({});
+    const [valorDoFiltro, setValorDoFiltro] = useState("");
+    const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
         service.getAllVideos()
             .then((dados) => {
                 const novasPlaylists = { ...playlists }
                 dados.data.forEach((video) => {
-                    if(!novasPlaylists[video.playlist]) novasPlaylists[video.playlist] = []
+                    if (!novasPlaylists[video.playlist]) novasPlaylists[video.playlist] = []
                     novasPlaylists[video.playlist].unshift(video)
                 })
                 setPlaylists(novasPlaylists);
             });
 
-    }, []);
+    }, [refresh]);
 
     return (
         <>
             <div >
                 <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
                 <Header />
-                <Timeline searchValue={valorDoFiltro} playlists={playlists}/>
+                <Timeline searchValue={valorDoFiltro} playlists={playlists} clearArray={setPlaylists} refresh={setRefresh} />
                 <Favoritos favoritos={config.favoritos} />
-                <RegisterVideo />
+                <RegisterVideo refresh={setRefresh} clearArray={setPlaylists} />
             </div>
         </>
     )
@@ -84,33 +85,71 @@ function Header() {
 
 function Timeline({ searchValue, ...props }) {
     const playlistName = Object.keys(props.playlists);
+    const [formVisivel, setFormVisivel] = useState(false);
+    const [idVideoToDelete, setIdVideoToDelete] = useState(0);
+
+    let count = 0;
+
     //Statement - Não usado no React
     //Retorno por Expressão
+    function deleteVideo(videoID) {
+        service.deleteVideoDB(String(videoID))
+            .then(() => {
+                props.clearArray({});
+                props.refresh(() => {
+                    count++
+                });
+                setFormVisivel(false);
+            });
+    }
     return (
-        <StyledTimeline>
-            {playlistName.map((playlistName) => {
-                const videos = props.playlists[playlistName];
-                return (
-                    <section key={playlistName}> 
-                        <h2>{playlistName}</h2>
-                        <div>
-                            {videos.filter((video) => {
-                                const titleNormalized = video.titulo.toLowerCase();
-                                const searchValueNormalized = searchValue.toLowerCase();
-                                return titleNormalized.includes(searchValueNormalized);
-                            }).map((video) => {
-                                return (
-                                    <a key={video.id} href={video.url}>
-                                        <img src={video.thumb} />
-                                        <span>{video.titulo}</span>
-                                    </a>
-                                )
-                            })}
+        <>
+
+            <StyledTimeline>
+                {playlistName.map((playlistName) => {
+                    const videos = props.playlists[playlistName];
+                    return (
+                        <section key={playlistName}>
+                            <h2>{playlistName}</h2>
+                            <div>
+                                {videos.filter((video) => {
+                                    const titleNormalized = video.titulo.toLowerCase();
+                                    const searchValueNormalized = searchValue.toLowerCase();
+                                    return titleNormalized.includes(searchValueNormalized);
+                                }).map((video) => {
+                                    return (
+                                        <p className="eachVideo">
+                                            <a key={video.id} href={video.url}>
+                                                <img src={video.thumb} />
+                                                <span>{video.titulo}</span>
+                                            </a>
+                                            <button onClick={() => { setFormVisivel(true), setIdVideoToDelete(video.id) }}><span>-</span></button>
+                                        </p>
+                                    )
+
+                                })}
+                            </div>
+                        </section>
+                    )
+                })}
+            </StyledTimeline>
+            {formVisivel && (
+                <StyledModal >
+                    <div className="modal-base">
+                        <div className="modal-confirmation">
+                            <button type="button" className="close-modal" onClick={() => {
+                                setFormVisivel(false);
+                            }}>X</button>
+                            <p>Deseja realmente escluir este vídeo?</p>
+                            <div className="buttons-content">
+                                <button type="text" className="btn btn-cancelar" onClick={() => setFormVisivel(false)}>Cancelar</button>
+                                <button type="text" className="btn" onClick={() => deleteVideo(idVideoToDelete)}>Excluir</button>
+                            </div>
                         </div>
-                    </section>
-                )
-            })}
-        </StyledTimeline>
+                    </div>
+                </StyledModal>
+            )}
+        </>
     )
 }
 
